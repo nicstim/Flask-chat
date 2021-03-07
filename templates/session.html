@@ -1,62 +1,63 @@
 <!DOCTYPE html>
-  <html lang="en">
-  <head>
+<html lang="en">
+<head>
     <title>Чат</title>
-  </head>
-  <body>
-    <style>
-      .message_holder {
-      height: 650px; /* высота нашего блока */
-      width: 500px; /* ширина нашего блока */
-      background: #fff; /* цвет фона, белый */
-      border: 1px solid #C1C1C1; /* размер и цвет границы блока */
-      overflow-x: scroll; /* прокрутка по горизонтали */
-      overflow-y: scroll; /* прокрутка по вертикали */
-      }
-    </style>
-    <div class="message_holder">
-      {% for message in messages %}
-      <div>
-        <b>{{message.user}}</b> {{message.msg}}
-      </div>
-      {% endfor %}
-    </div>
+</head>
+<body>
+<style>
+    .message_holder {
+        height: 650px; /* высота нашего блока */
+        width: 500px; /* ширина нашего блока */
+        background: #fff; /* цвет фона, белый */
+        border: 1px solid #C1C1C1; /* размер и цвет границы блока */
+        overflow-x: scroll; /* прокрутка по горизонтали */
+        overflow-y: scroll; /* прокрутка по вертикали */
+    }
+</style>
+<div class="message_holder">
+    {% for message in messages %}
+        <div>
+            <b>{{ message.user }}</b> {{ message.msg }}
+        </div>
+    {% endfor %}
+</div>
 
-    <form action="" method="POST">
-      <input type="text" class="username" placeholder="Ваше имя:"/>
-      <input type="text" class="message" placeholder="Сообщение:"/>
-      <input type="submit"/>
-    </form>
+<form action="" method="POST">
+    <input type="text" class="username" placeholder="Ваше имя:"/>
+    <input type="text" class="message" placeholder="Сообщение:"/>
+    <input type="submit"/>
+</form>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-    <!-- ------------------------- -->
-    <!--  -->
-    <script type="text/javascript">
-      var socket = io.connect('http://' + document.domain + ':' + location.port);
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<!-- ------------------------- -->
+<!--  -->
+<script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    console.log('http://' + document.domain + ':' + location.port)
 
-      socket.on( 'connect', function() {
-        socket.emit( 'my event', {
-          data: 'User Connected'
-        } )
-        var form = $( 'form' ).on( 'submit', function( e ) {
-          e.preventDefault()
-          let user_name = $( 'input.username' ).val()
-          let user_input = $( 'input.message' ).val()
-          socket.emit( 'my event', {
-            user_name : user_name,
-            message : user_input
-          } )
-          $( 'input.message' ).val( '' ).focus()
-        } )
-      } )
-      socket.on( 'my response', function( msg ) {
-        console.log( msg )
-        if( typeof msg.user_name !== 'undefined' ) {
-          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+    socket.on('connect', function () {
+        socket.emit('my event', {
+            data: 'User Connected'
+        })
+        var form = $('form').on('submit', function (e) {
+            e.preventDefault()
+            let user_name = $('input.username').val()
+            let user_input = $('input.message').val()
+            socket.emit('my event', {
+                user_name: user_name,
+                message: user_input
+            })
+            $('input.message').val('').focus()
+        })
+    })
+    socket.on('my response', function (msg) {
+        console.log(msg)
+        if (typeof msg.user_name !== 'undefined') {
+            $('div.message_holder').append('<div><b style="color: #000">' + msg.user_name + '</b> ' + msg.message + '</div>')
         }
-      })
-    </script>
+    })
+</script>
 
-  </body>
-  </html>
+</body>
+</html>
